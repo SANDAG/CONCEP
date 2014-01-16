@@ -1,0 +1,35 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="concep.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="concepMainFormText" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CONCEP V 3.5 - Census Allocation (SR13 06/2012  Build)</Value>
+    </Setting>
+    <Setting Name="assignLuduHsTypeYear" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2010</Value>
+    </Setting>
+    <Setting Name="spRunAssignLuduHsType" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">EXECUTE sp_assign_ludu_hs_type @estimates_year</Value>
+    </Setting>
+    <Setting Name="controlGqMainButtonText" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Allocate 2010 Census (SR13)
+
+</Value>
+    </Setting>
+    <Setting Name="controlVitalsMainButtonText" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Income Calibration</Value>
+    </Setting>
+    <Setting Name="controlVitalsRunButtonText" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Run</Value>
+    </Setting>
+    <Setting Name="estimatesYearComboItems" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2001,2002,2003,2004,2005,2006, 2007,2008,2009,2010</Value>
+    </Setting>
+    <Setting Name="estIncPriceIndex" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">182.80,191.20,197.90,205.30,212.80, 220.60,228.10,233.32,242.31,242.31</Value>
+    </Setting>
+    <Setting Name="concepSqlConnectionString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Data Source=PILA\SDGINTDB;Initial Catalog=concep_test;User ID=concep_app;Password=c0nc3p_@pp</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
