@@ -133,7 +133,6 @@ namespace CV
 
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.MainMenu mainMenu1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Button btnRunControlVitals;
@@ -152,7 +151,7 @@ namespace CV
         private System.Windows.Forms.CheckBox optDebug;
         private System.Windows.Forms.Label label6;
       
-        private IContainer components;
+        //private IContainer components;
 
         public ControlVitals()
         {
@@ -164,17 +163,7 @@ namespace CV
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
+       
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -182,11 +171,9 @@ namespace CV
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlVitals));
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnExit = new System.Windows.Forms.Button();
             this.doDeaths = new System.Windows.Forms.CheckBox();
@@ -202,6 +189,8 @@ namespace CV
             this.panel2 = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
             this.btnRunControlVitals = new System.Windows.Forms.Button();
+            this.sqlConnection = new System.Data.SqlClient.SqlConnection();
+            this.sqlCommand = new System.Data.SqlClient.SqlCommand();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -377,6 +366,10 @@ namespace CV
             this.btnRunControlVitals.UseVisualStyleBackColor = false;
             this.btnRunControlVitals.Click += new System.EventHandler(this.btnRunControlVitals_Click);
             // 
+            // sqlConnection
+            // 
+            this.sqlConnection.FireInfoMessageEventOnUserErrors = false;
+            // 
             // ControlVitals
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -398,7 +391,6 @@ namespace CV
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Menu = this.mainMenu1;
             this.Name = "ControlVitals";
             this.Text = "CONCEP Version 4 - Control Vitals";
             this.panel2.ResumeLayout(false);
@@ -733,10 +725,11 @@ namespace CV
         private void deathByPachinko()
         {
             int cumSum, sum, difference;
-            int index, i, eth, sex, age, m;
+            int i, eth, sex, age, m;
+            double index;
             int[,] deathsByAge = new int[NUM_AGE, 2];  /* Array of population of a distinct eth and sex by age (1-100). */
             double[] cumProb = new double[NUM_AGE];
-            Random rand = new Random();
+            Random rand = new Random(0);
 
             // First distribute calculated deaths across ages array by eth, sex.
             for (eth = 1; eth < NUM_ETH; eth++)
@@ -768,7 +761,7 @@ namespace CV
                     {
                         while (difference < 0)
                         {
-                            index = rand.Next(0, 100);
+                            index = rand.NextDouble() * 100;
 
                             for (i = 0; i < NUM_AGE; i++)
                             {
@@ -826,11 +819,12 @@ namespace CV
         */
         private void distributeDeathsByCT(int eth, int sex, int[,] deathsAcrossAges)
         {
-            int cumSum, sum, index, age;
+            int cumSum, sum, age;
+            double index;
             int loopCount, ct, k;
             int[,] pop = new int[NUM_CTS, 2];  /* First index of second dimension holds CT number, the second index the population of that CT. */
             double[] cumProb = new double[NUM_CTS];
-            Random rand = new Random();
+            Random rand = new Random(0);
 
             // Fill pop with populations.
             for (loopCount = 0; loopCount < NUM_AGE; loopCount++)
@@ -852,16 +846,18 @@ namespace CV
                         cumProb[k] = ((double)cumSum / (double)sum) * 100;
                 }   // end for
 
+
                 // Distribute deaths of this eth, sex, and age across CTs.
                 while (deathsAcrossAges[loopCount, 1] > 0)
                 {
-                    index = rand.Next(0, 100);
+                    index = rand.NextDouble() * 100;
                     for (int i = 0; i < cumProb.Length; i++)
                     {
                         if (cumProb[i] > index)
                         {
                             if (pop[i, 1] > deathsByCT[eth, sex, age, pop[i, 0]])
                             {
+                                if (age == 92) Console.WriteLine(pop[i,0]);
                                 deathsByCT[eth, sex, age, pop[i, 0]]++;
                                 deathsAcrossAges[loopCount, 1]--;
                             }   // end if
@@ -1337,6 +1333,7 @@ namespace CV
         {
             try
             {
+
                 config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
                 appSettings = config.AppSettings.Settings;
                 connectionStrings = config.ConnectionStrings.ConnectionStrings;
@@ -1353,6 +1350,7 @@ namespace CV
 
                 sqlConnection.ConnectionString = connectionStrings["ConcepDBConnectionString"].ConnectionString;
                 this.sqlCommand.Connection = this.sqlConnection;
+
                 TN.basePopCT = String.Format(appSettings["basePopCT"].Value);
                 TN.basePopMGRA = String.Format(appSettings["basePopMGRA"].Value);
                 TN.birthsCT = String.Format(appSettings["birthsCT"].Value);

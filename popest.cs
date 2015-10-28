@@ -70,6 +70,7 @@ using System.Windows.Forms;
 using System.Data;
 using System.IO;
 using System.Configuration;
+using System.Data.SqlClient;
 
 
 namespace PMGRA
@@ -199,6 +200,7 @@ namespace PMGRA
             public string popestVacOvr;
             public string popestHHSOvr;
             public string xref;
+            public string hsFromLandcore;
         } // end tablenames
 
         public static int MAX_MGRAS_IN_CITY;  // max number of MGRAs in any city
@@ -331,8 +333,6 @@ namespace PMGRA
             // 
             // sqlConnection
             // 
-            this.sqlConnection.ConnectionString = "Data Source=PILA\\SDGINTDB;Initial Catalog=concep_test;Persist Security Info=True;" +
-    "User ID=concep_app;Password=c0nc3p_@pp";
             this.sqlConnection.FireInfoMessageEventOnUserErrors = false;
             // 
             // panel1
@@ -506,7 +506,7 @@ namespace PMGRA
             int i, j, k, target, ii, kk, real_index;
             int status, mgra1, city;
             FileStream fout;		//file stream class
-
+            bool skipthis = true;
             System.Data.SqlClient.SqlDataReader rdr;
             int[] mgra_list = new int[NUM_MGRAS];
             int[] limit = new int[MAX_MGRAS_IN_CITY];     //lower or upper bound used to restrict +/- controlling
@@ -626,128 +626,134 @@ namespace PMGRA
                 int sfsum = 0;
                 WriteToStatusBox("Controlling city # " + ii.ToString());
 
-                /* hs_sf */
-                j = md[ii].counter;
-                target = s[ii].hs_sf;
-                //zero the arrays used in the controlling                
-                Array.Clear(limit, 0, limit.Length);
-                Array.Clear(passer, 0, passer.Length);
-                Array.Clear(t_index, 0, t_index.Length);
-
-                //write the data to temporary arrays for sorting before controlling
-                for (kk = 0; kk < j; ++kk)
+                // skip any controlling on HS by structure - these data come from HS From Landcore
+                if (!skipthis)
                 {
-                    passer[kk] = md[ii].d[kk].hs_sf;
-                    t_index[kk] = kk;
-                }  // end for kk
-                //sort the data in ascending order - this
-                CU.cUtil.AscendingSort(t_index, passer, limit, j);
 
-                //call the controlling
-                status = CU.cUtil.Roundit(passer, limit, target, j, 1);
-                if (status > 0)
-                {
-                    MessageBox.Show("hs_sf roundit city # " + ii.ToString() + " diff = " + status.ToString());
-                }  // end if
 
-                /* restore the rounded data to the actual data arrays*/
-                for (kk = 0; kk < j; ++kk)
-                {
-                    real_index = t_index[kk];
-                    md[ii].d[real_index].hs_sf = passer[kk];
-                    sfsum += passer[kk];
-                }  // end for
+                    /* hs_sf */
+                    j = md[ii].counter;
+                    target = s[ii].hs_sf;
+                    //zero the arrays used in the controlling                
+                    Array.Clear(limit, 0, limit.Length);
+                    Array.Clear(passer, 0, passer.Length);
+                    Array.Clear(t_index, 0, t_index.Length);
 
-                /* hs_sfmu */
-                j = md[ii].counter;
-                target = s[ii].hs_sfmu;
-                //zero the arrays used in the controlling                
-                Array.Clear(limit, 0, limit.Length);
-                Array.Clear(passer, 0, passer.Length);
-                Array.Clear(t_index, 0, t_index.Length);
+                    //write the data to temporary arrays for sorting before controlling
+                    for (kk = 0; kk < j; ++kk)
+                    {
+                        passer[kk] = md[ii].d[kk].hs_sf;
+                        t_index[kk] = kk;
+                    }  // end for kk
+                    //sort the data in ascending order - this
+                    CU.cUtil.AscendingSort(t_index, passer, limit, j);
 
-                //write the data to temporary arrays for sorting before controlling
-                for (kk = 0; kk < j; ++kk)
-                {
-                    passer[kk] = md[ii].d[kk].hs_sfmu;
-                    t_index[kk] = kk;
-                }  // end for
-                //sort the data in ascending order - this
-                CU.cUtil.AscendingSort(t_index, passer, limit, j);
+                    //call the controlling
+                    status = CU.cUtil.Roundit(passer, limit, target, j, 1);
+                    if (status > 0)
+                    {
+                        MessageBox.Show("hs_sf roundit city # " + ii.ToString() + " diff = " + status.ToString());
+                    }  // end if
 
-                //call the controlling
-                status = CU.cUtil.Roundit(passer, limit, target, j, 1);
-                if (status > 0)
-                {
-                    MessageBox.Show("hs_sfmu roundit city # " + ii.ToString() + " diff = " + status.ToString());
-                } // end for
+                    /* restore the rounded data to the actual data arrays*/
+                    for (kk = 0; kk < j; ++kk)
+                    {
+                        real_index = t_index[kk];
+                        md[ii].d[real_index].hs_sf = passer[kk];
+                        sfsum += passer[kk];
+                    }  // end for
 
-                /* restore the rounded data to the actual data arrays*/
-                for (kk = 0; kk < j; ++kk)
-                {
-                    real_index = t_index[kk];
-                    md[ii].d[real_index].hs_sfmu = passer[kk];
-                }  // end for
+                    /* hs_sfmu */
+                    j = md[ii].counter;
+                    target = s[ii].hs_sfmu;
+                    //zero the arrays used in the controlling                
+                    Array.Clear(limit, 0, limit.Length);
+                    Array.Clear(passer, 0, passer.Length);
+                    Array.Clear(t_index, 0, t_index.Length);
 
-                /* hs_mf */
-                j = md[ii].counter;
-                target = s[ii].hs_mf;
-                //zero the arrays used in the controlling
-                Array.Clear(limit, 0, limit.Length);
-                Array.Clear(passer, 0, passer.Length);
-                Array.Clear(t_index, 0, t_index.Length);
+                    //write the data to temporary arrays for sorting before controlling
+                    for (kk = 0; kk < j; ++kk)
+                    {
+                        passer[kk] = md[ii].d[kk].hs_sfmu;
+                        t_index[kk] = kk;
+                    }  // end for
+                    //sort the data in ascending order - this
+                    CU.cUtil.AscendingSort(t_index, passer, limit, j);
 
-                //write the data to temporary arrays for sorting before controlling
-                for (kk = 0; kk < j; ++kk)
-                {
-                    passer[kk] = md[ii].d[kk].hs_mf;
-                    t_index[kk] = kk;
-                }     // end for
-                //sort the data in ascending order - this
-                CU.cUtil.AscendingSort(t_index, passer, limit, j);
+                    //call the controlling
+                    status = CU.cUtil.Roundit(passer, limit, target, j, 1);
+                    if (status > 0)
+                    {
+                        MessageBox.Show("hs_sfmu roundit city # " + ii.ToString() + " diff = " + status.ToString());
+                    } // end for
 
-                //call the controlling
-                status = CU.cUtil.Roundit(passer, limit, target, j, 1);
-                if (status > 0)
-                    MessageBox.Show("hs_mf roundit city # " + ii.ToString() + " diff = " + status.ToString());
+                    /* restore the rounded data to the actual data arrays*/
+                    for (kk = 0; kk < j; ++kk)
+                    {
+                        real_index = t_index[kk];
+                        md[ii].d[real_index].hs_sfmu = passer[kk];
+                    }  // end for
 
-                /* restore the rounded data to the actual data arrays*/
-                for (kk = 0; kk < j; ++kk)
-                {
-                    real_index = t_index[kk];
-                    md[ii].d[real_index].hs_mf = passer[kk];
-                } // end for
+                    /* hs_mf */
+                    j = md[ii].counter;
+                    target = s[ii].hs_mf;
+                    //zero the arrays used in the controlling
+                    Array.Clear(limit, 0, limit.Length);
+                    Array.Clear(passer, 0, passer.Length);
+                    Array.Clear(t_index, 0, t_index.Length);
 
-                /* hs_mh */
-                j = md[ii].counter;
-                target = s[ii].hs_mh;
-                //zero the arrays used in the controlling
-                Array.Clear(limit, 0, limit.Length);
-                Array.Clear(passer, 0, passer.Length);
-                Array.Clear(t_index, 0, t_index.Length);
+                    //write the data to temporary arrays for sorting before controlling
+                    for (kk = 0; kk < j; ++kk)
+                    {
+                        passer[kk] = md[ii].d[kk].hs_mf;
+                        t_index[kk] = kk;
+                    }     // end for
+                    //sort the data in ascending order - this
+                    CU.cUtil.AscendingSort(t_index, passer, limit, j);
 
-                //write the data to temporary arrays for sorting before controlling
-                for (kk = 0; kk < j; ++kk)
-                {
-                    passer[kk] = md[ii].d[kk].hs_mh;
-                    t_index[kk] = kk;
-                }     // end for
-                //sort the data in ascending order - this
-                CU.cUtil.AscendingSort(t_index, passer, limit, j);
+                    //call the controlling
+                    status = CU.cUtil.Roundit(passer, limit, target, j, 1);
+                    if (status > 0)
+                        MessageBox.Show("hs_mf roundit city # " + ii.ToString() + " diff = " + status.ToString());
 
-                //call the controlling
-                status = CU.cUtil.Roundit(passer, limit, target, j, 1);
-                if (status > 0)
-                    MessageBox.Show("hs_mh roundit city # " + ii.ToString() + " diff = " + status.ToString());
+                    /* restore the rounded data to the actual data arrays*/
+                    for (kk = 0; kk < j; ++kk)
+                    {
+                        real_index = t_index[kk];
+                        md[ii].d[real_index].hs_mf = passer[kk];
+                    } // end for
 
-                /* restore the rounded data to the actual data arrays*/
-                for (kk = 0; kk < j; ++kk)
-                {
-                    real_index = t_index[kk];
-                    md[ii].d[real_index].hs_mh = passer[kk];
-                    md[ii].d[real_index].hs = md[ii].d[real_index].hs_sf +
-                        md[ii].d[real_index].hs_mf + md[ii].d[real_index].hs_mh;
-                }     /* end for kk */
+                    /* hs_mh */
+                    j = md[ii].counter;
+                    target = s[ii].hs_mh;
+                    //zero the arrays used in the controlling
+                    Array.Clear(limit, 0, limit.Length);
+                    Array.Clear(passer, 0, passer.Length);
+                    Array.Clear(t_index, 0, t_index.Length);
+
+                    //write the data to temporary arrays for sorting before controlling
+                    for (kk = 0; kk < j; ++kk)
+                    {
+                        passer[kk] = md[ii].d[kk].hs_mh;
+                        t_index[kk] = kk;
+                    }     // end for
+                    //sort the data in ascending order - this
+                    CU.cUtil.AscendingSort(t_index, passer, limit, j);
+
+                    //call the controlling
+                    status = CU.cUtil.Roundit(passer, limit, target, j, 1);
+                    if (status > 0)
+                        MessageBox.Show("hs_mh roundit city # " + ii.ToString() + " diff = " + status.ToString());
+
+                    /* restore the rounded data to the actual data arrays*/
+                    for (kk = 0; kk < j; ++kk)
+                    {
+                        real_index = t_index[kk];
+                        md[ii].d[real_index].hs_mh = passer[kk];
+                        md[ii].d[real_index].hs = md[ii].d[real_index].hs_sf +
+                            md[ii].d[real_index].hs_mf + md[ii].d[real_index].hs_mh;
+                    }     /* end for kk */
+                }  // end if !skipthis
 
                 //gq_civ_college
                 j = md[ii].counter;
@@ -1041,7 +1047,7 @@ namespace PMGRA
             /* HS from hs table */
             WriteToStatusBox("EXTRACTING HS DATA");
 
-            sqlCommand1.CommandText = String.Format(appSettings["selectPOPEST2"].Value, TN.popestMGRA, TN.xref, fyear);
+            sqlCommand1.CommandText = String.Format(appSettings["selectPOPEST2"].Value, TN.hsFromLandcore, TN.xref, fyear);
 
             try
             {
@@ -1194,6 +1200,7 @@ namespace PMGRA
                 this.sqlCommand1.Connection = this.sqlConnection;
 
                 TN.GQControlled = String.Format(appSettings["GQControlled"].Value);
+                TN.hsFromLandcore = String.Format(appSettings["HSFromLandcore"].Value);
                 TN.popestMGRA = String.Format(appSettings["popestMGRA"].Value);
                 TN.popestControls = String.Format(appSettings["popestControls"].Value);
                 TN.popestUpdate = String.Format(appSettings["popestUpdate"].Value);

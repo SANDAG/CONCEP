@@ -426,7 +426,23 @@ namespace CGQ
                 }  // end while
 
                 //sum the gq_civ_other and control
+                try
+                {
+                    if (g[i].control_other > 0 && g[i].civ_other_total == 0)
+                    {
+                        throw new Exception("City " + (i + 1) + " has control of " + g[i].control_other +
+                            " gq_civ_oth, but 0 gq_civ_oth lckey sites to control to! Check your gq_by_lckey_raw table.");
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                    Application.Exit();
+                }
+
                 diff = g[i].control_other - g[i].civ_other_total;
+                
+
                 while (diff != 0)
                 {
                     for (j = 0; j < g[i].citycount; ++j)

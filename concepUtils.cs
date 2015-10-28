@@ -514,6 +514,7 @@ namespace CU
                             while (!found_col && countk < ncols)
                             {
                                 k = ran.Next(0, ncols);
+
                                 if (k == j) continue;
                                 ++countk;
                                 if (col_diff[k] < 0)

@@ -71,7 +71,6 @@ namespace Sandag.TechSvcs.RegionalModels
         private System.Windows.Forms.Button btnRunEstInc;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button btnRunControlVitals;
-        private SqlConnection sqlConnection;
         private Button btnRunIncomeCalib;
         private Button btnRunDHH;
         private Button btnRunCensus;
@@ -81,30 +80,6 @@ namespace Sandag.TechSvcs.RegionalModels
         public concep()
         {
             InitializeComponent();
-            //MethodInvoker mi = new MethodInvoker(assignLuduHsType);
-            //mi.BeginInvoke(null, null);
-        }
-
-        /// <summary>
-        /// Method to run the ludu HS assignment. This should be run on a worker thread.
-        /// </summary>
-        private void assignLuduHsType()
-        {
-            int i = global::concep.Properties.GlobalSettings.Default.index;
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.Connection = sqlConnection;
-            int estimatesYear = global::concep.Properties.Settings.Default.assignLuduHsTypeYear;
-            try
-            {
-                sqlConnection.Open();
-                sqlCommand.CommandText = global::concep.Properties.Settings.Default.spRunAssignLuduHsType;
-                sqlCommand.Parameters.Add(new SqlParameter("@estimates_year", estimatesYear));
-                sqlCommand.ExecuteNonQuery();
-            }
-            catch (SqlException s)
-            {
-                MessageBox.Show(s.ToString());
-            }
         }
 
         protected override void Dispose(bool disposing)
@@ -136,7 +111,6 @@ namespace Sandag.TechSvcs.RegionalModels
             this.btnRunDHH = new System.Windows.Forms.Button();
             this.btnRunIncomeCalib = new System.Windows.Forms.Button();
             this.btnRunControlVitals = new System.Windows.Forms.Button();
-            this.sqlConnection = new System.Data.SqlClient.SqlConnection();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -303,11 +277,6 @@ namespace Sandag.TechSvcs.RegionalModels
             this.btnRunControlVitals.Text = "Control Vitals";
             this.btnRunControlVitals.UseVisualStyleBackColor = false;
             this.btnRunControlVitals.Click += new System.EventHandler(this.btnControlVitals_Click);
-            // 
-            // sqlConnection
-            // 
-            this.sqlConnection.ConnectionString = global::concep.Properties.Settings.Default.concepSqlConnectionString;
-            this.sqlConnection.FireInfoMessageEventOnUserErrors = false;
             // 
             // concep
             // 

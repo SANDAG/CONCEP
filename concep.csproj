@@ -103,11 +103,6 @@
     <Compile Include="cmain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="concepDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>concepDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="concepUtils.cs" />
     <Compile Include="controlGQ.cs">
       <SubType>Form</SubType>
@@ -202,19 +197,11 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="concep.exe.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="concepDataSet.xsc">
-      <DependentUpon>concepDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="concepDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>concepDataSet.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="concepDataSet.xss">
-      <DependentUpon>concepDataSet.xsd</DependentUpon>
+    <None Include="connections.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\DataSources\concep.Properties.GlobalSettings.datasource" />
     <None Include="Properties\DataSources\concep.Properties.Settings.datasource" />

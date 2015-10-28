@@ -375,9 +375,9 @@ namespace pasee
             pop_ct = new pop_master[NUM_CTS + 1, NUM_ETH, NUM_SEX];
             pop_sra = new pop_master[NUM_SRA + 1, NUM_ETH, NUM_SEX];
 
-            pasee_update_0_proc = "sp_add_detailed_pop_total";
+            pasee_update_0_proc = config.AppSettings.Settings["spPaseeUpdate0"].Value;
 
-            ct_stored_proc = "sp_populate_ct_tab_table";
+            ct_stored_proc = config.AppSettings.Settings["spPopulateCTTab"].Value;
             regional_estimates_file = networkPath + "reg_est_out_" + fyear;
             ct_estimates_file = networkPath + "ct_est_out_" + fyear;
             sra_estimates_file = networkPath + "sra_est_out_" + fyear;
