@@ -1056,7 +1056,7 @@ namespace PMGRA
                 while (rdr.Read())
                 {
                     mgra = rdr.GetInt32(0);
-                    city = rdr.GetByte(1);
+                    city = rdr.GetInt32(1);
                     sf = rdr.GetInt32(2);
                     sfmu = rdr.GetInt32(3);
                     mf = rdr.GetInt32(4);

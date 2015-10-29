@@ -243,8 +243,6 @@ namespace pasee
             // 
             // sqlConnection
             // 
-            this.sqlConnection.ConnectionString = "Data Source=PILA\\SDGINTDB;Initial Catalog=concep_test;Persist Security Info=True;" +
-    "User ID=concep_app;Password=c0nc3p_@pp";
             this.sqlConnection.FireInfoMessageEventOnUserErrors = false;
             // 
             // label1
@@ -538,6 +536,7 @@ namespace pasee
                 TN.popEstimatesCT = String.Format(appSettings["popEstimatesCT"].Value);
                 TN.popEstimatesTabCT = String.Format(appSettings["popEstimatesTabCT"].Value);
                 TN.popEstimatesTabMGRA = String.Format(appSettings["popEstimatesTabMGRA"].Value);
+                TN.ct2010ToSra1990 = String.Format(appSettings["ct_2010_to_sra_1990"].Value);
                 
                 TN.popestMGRA = String.Format(appSettings["popestMGRA"].Value);
                 TN.specialPopTracts = String.Format(appSettings["specialPopTracts"].Value);
@@ -1171,7 +1170,7 @@ namespace pasee
 
             // populate the tabular format table - execute stored procedure
             WriteToStatusBox("BUILDING ESTIMATES CT TABULAR TABLE");
-            this.sqlCommand.CommandText = "execute " + ct_stored_proc + " '" + TN.popEstimatesTabCT + "', '" + TN.popEstimatesCT + "', 'xref_mgra_sr13', " + fyear;
+            this.sqlCommand.CommandText = "execute " + ct_stored_proc + " '" + TN.popEstimatesTabCT + "', '" + TN.popEstimatesCT + "','" + TN.xref + "', " + fyear;
 
             try
             {
@@ -1269,7 +1268,7 @@ namespace pasee
 
             num_ct = 0;
             WriteToStatusBox("EXTRACTING CENSUS TRACT LIST");
-            sqlCommand.CommandText = String.Format(appSettings["selectPASEE1"].Value, TN.xref);
+            sqlCommand.CommandText = String.Format(appSettings["selectPASEE1"].Value, TN.ct2010ToSra1990);
             try
             {
                 sqlConnection.Open();
@@ -1277,7 +1276,7 @@ namespace pasee
                 rdr = sqlCommand.ExecuteReader();
                 while (rdr.Read())
                 {
-                    ct_list[num_ct, 1] = (int)rdr.GetByte(0);
+                    ct_list[num_ct, 1] = (int)rdr.GetInt32(0);
                     ct_list[num_ct++, 0] = rdr.GetInt32(1);
                 }  // end while
                 rdr.Close();
@@ -1628,7 +1627,7 @@ namespace pasee
                 rdr = sqlCommand.ExecuteReader();
                 while (rdr.Read())
                 {
-                    sra = (int)rdr.GetByte(0);
+                    sra = (int)rdr.GetInt32(0);
                     ct = rdr.GetInt32(1);
                     popin = rdr.GetInt32(2);
                     hhp = rdr.GetInt32(3);
@@ -1675,7 +1674,7 @@ namespace pasee
                 rdr = sqlCommand.ExecuteReader();
                 while (rdr.Read())
                 {
-                    sra = (int)rdr.GetByte(0);
+                    sra = (int)rdr.GetInt32(0);
                     ct = rdr.GetInt32(1);
                     popin = rdr.GetInt32(2);
                     hhp = rdr.GetInt32(3);
@@ -2586,7 +2585,7 @@ namespace pasee
         public string popEstimatesTabMGRA;
         public string specialPopTracts;
         public string xref;
-
+        public string ct2010ToSra1990;
     }     //end class TableNames
     
 }

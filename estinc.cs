@@ -2426,7 +2426,7 @@ namespace estinc
                 rdr = this.sqlCommand.ExecuteReader();
                 while (rdr.Read())
                 {
-                    sra = rdr.GetByte(0);
+                    sra = rdr.GetInt32(0);
                     nsra = GetIndex(sra, sra_list);
                     hh[nsra] = rdr.GetInt32(1);
                 }     // end while
