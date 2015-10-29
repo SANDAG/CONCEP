@@ -898,7 +898,7 @@ namespace CV
 
             WriteToStatusBox("...Distinct ZIP List");
             sqlCommand.CommandText = String.Format(appSettings["selectControlVitals2"].Value, TN.xref);    
-            //sqlCommand.CommandText = "select distinct zip from xref_mgra_sr13 order by zip";
+
             // populate the zip_code list
             try
             {
@@ -929,7 +929,7 @@ namespace CV
             // get the mgra list for zip codes - populate the zip code list 
             WriteToStatusBox("...MGRA by ZIP");
             sqlCommand.CommandText = String.Format(appSettings["selectControlVitals4"].Value, TN.xref);
-            //sqlCommand.CommandText = "select distinct mgra,zip from dbo.xref_mgra_sr13 order by zip, mgra";
+
             try
             {
 
@@ -1078,11 +1078,11 @@ namespace CV
 
             WriteToStatusBox("...Distinct CTs for Deaths");
             sqlCommand.CommandText = String.Format(appSettings["selectCT"].Value, TN.xref);
-            //this.sqlCommand.CommandText = "SELECT DISTINCT ct10 FROM xref_mgra_sr13 ORDER BY ct10";
+
             try
             {
                 sqlConnection.Open();
-                // Populate list of CTs from xref_mgra_sr11
+                // Populate list of CTs from xref
                
                 rdr = this.sqlCommand.ExecuteReader();
                 ct = 0;     // Use ct as an index into ctList array
