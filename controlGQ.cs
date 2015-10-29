@@ -363,16 +363,14 @@ namespace CGQ
 
             // fill the lckey array
             sqlCommand.CommandText = String.Format(appSettings["selectControlGQ2"].Value, TN.GQRaw, TN.xref, selectedYear);
-            //sqlCommand.CommandText = "Select x.city,lckey,lu,g.mgra,gq,gq_civ,gq_mil,gq_civ_college,gq_civ_other from gq_by_lckey_raw g, xref_mgra_sr13 x" +
-            //                        " where x.mgra = g.mgra and estimates_year = " + selectedYear + " order by x.city,gq desc";
-
+            
             try
             {
                 sqlConnection.Open();
                 rdr = sqlCommand.ExecuteReader();
                 while (rdr.Read())
                 {
-                    j = rdr.GetByte(0) - 1;
+                    j = rdr.GetInt32(0) - 1;
                     lcount = g[j].citycount;
                     g[j].lckey[lcount] = rdr.GetInt32(1); 
                     g[j].lu[lcount] = rdr.GetInt32(2);
